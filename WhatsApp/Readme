@@ -4,33 +4,33 @@ Let me explain clearly what this workflow is doing and where you might face issu
 
 
 
-# 🚀 What This Workflow Does (Simple Explanation)
+#  What This Workflow Does (Simple Explanation)
 
 This workflow builds an **AI Pre-Meeting Assistant** that:
 
-1. ⏰ Runs every hour
-2. 📅 Checks Google Calendar for meetings happening in the next 1 hour
-3. 👥 Extracts attendee details
-4. 📧 Fetches last Gmail correspondence with each attendee
-5. 🔎 Scrapes their LinkedIn (via Apify)
-6. 🤖 Uses OpenAI to:
+1.  Runs every hour
+2.  Checks Google Calendar for meetings happening in the next 1 hour
+3.  Extracts attendee details
+4.  Fetches last Gmail correspondence with each attendee
+5.  Scrapes their LinkedIn (via Apify)
+6.  Uses OpenAI to:
 
    * Summarize emails
    * Summarize LinkedIn profile + activity
    * Generate a smart pre-meeting WhatsApp message
-7. 📲 Sends you a WhatsApp reminder
+7.  Sends you a WhatsApp reminder
 
----
 
-# 🧠 Workflow Flow Breakdown (Step-by-Step)
 
-### 1️⃣ Schedule Trigger
+##  Workflow Flow Breakdown (Step-by-Step)
+
+## 1️⃣ Schedule Trigger
 
 Runs every hour.
 
 ⬇
 
-### 2️⃣ Check For Upcoming Meetings
+## 2️⃣ Check For Upcoming Meetings
 
 Uses Google Calendar:
 
@@ -41,7 +41,7 @@ If meeting found → continue
 
 ⬇
 
-### 3️⃣ Extract Attendee Info
+## 3️⃣ Extract Attendee Info
 
 Uses LLM to extract:
 
