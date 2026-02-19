@@ -2,7 +2,7 @@
 
 Let me explain clearly what this workflow is doing and where you might face issues + improvements you can make.
 
-
+---------------------------------------------------------------------
 
 #  What This Workflow Does (Simple Explanation)
 
@@ -20,17 +20,17 @@ This workflow builds an **AI Pre-Meeting Assistant** that:
    * Generate a smart pre-meeting WhatsApp message
 7.  Sends you a WhatsApp reminder
 
+---------------------------------------------------------------------
 
+  Workflow Flow Breakdown (Step-by-Step)
 
-##  Workflow Flow Breakdown (Step-by-Step)
-
-## 1️⃣ Schedule Trigger
+ 1️⃣ Schedule Trigger
 
 Runs every hour.
 
 ⬇
 
-## 2️⃣ Check For Upcoming Meetings
+ 2️⃣ Check For Upcoming Meetings
 
 Uses Google Calendar:
 
@@ -41,7 +41,7 @@ If meeting found → continue
 
 ⬇
 
-## 3️⃣ Extract Attendee Info
+ 3️⃣ Extract Attendee Info
 
 Uses LLM to extract:
 
@@ -51,17 +51,17 @@ Uses LLM to extract:
 
 ⬇
 
-### 4️⃣ For Each Attendee
+ 4️⃣ For Each Attendee
 
 Split → Research each person separately:
 
-### 📧 Email Branch
+  Email Branch
 
 * Check if email exists
 * Fetch last Gmail message
 * Summarize with OpenAI
 
-### 🔗 LinkedIn Branch
+  LinkedIn Branch
 
 * If LinkedIn URL exists
 * Scrape via Apify using cookie
@@ -73,7 +73,7 @@ Split → Research each person separately:
 
 ⬇
 
-### 5️⃣ Merge Everything
+5️⃣ Merge Everything
 
 Combine:
 
@@ -83,19 +83,19 @@ Combine:
 
 ⬇
 
-### 6️⃣ Generate Final SMS Style Message
+ 6️⃣ Generate Final SMS Style Message
 
 Using "Attendee Research Agent"
 
 ⬇
 
-### 7️⃣ Send WhatsApp Message
+ 7️⃣ Send WhatsApp Message
 
----
+--------------------------------------------------------------------
 
-# ⚠️ Important Issues You Must Fix
+  Important Issues You Must Fix
 
-## 🚨 1. LinkedIn Cookie Placeholder
+ 1. LinkedIn Cookie Placeholder
 
 You still have:
 
@@ -108,12 +108,12 @@ This will FAIL until you paste:
 * Your `li_at` cookie
 * Full cookie string
 
-⚠️ Also be careful:
+ Also be careful:
 LinkedIn can block your account if scraping aggressively.
 
----
+----------------------------
 
-## 🚨 2. LinkedIn Scraping Is Risky
+ 2. LinkedIn Scraping Is Risky
 
 This part:
 
@@ -129,9 +129,9 @@ Better approach:
 * Avoid regex extraction
 * Save it as clean variable
 
----
+-------------------------
 
-## 🚨 3. WhatsApp Number Is Hardcoded
+ 3. WhatsApp Number Is Hardcoded
 
 ```json
 "recipientPhoneNumber": "44123456789"
@@ -142,9 +142,9 @@ You should:
 * Make this dynamic
 * Or store your real number
 
----
+-----------------------------
 
-## 🚨 4. Using Same Workflow as Subworkflow
+ 4. Using Same Workflow as Subworkflow
 
 You are using:
 
@@ -155,27 +155,27 @@ You are using:
 This means:
 It calls itself as subworkflow.
 
-⚠️ That can cause recursion issues.
+ That can cause recursion issues.
 
 Better:
 
 * Duplicate workflow
 * Make a separate "Attendee Research Subworkflow"
 
----
+-----------------------------------------------------------------------------
 
-# 💡 How To Make This Production-Ready
+ How To Make This Production-Ready
 
-### ✅ 1. Add Error Logging
+ ✅ 1. Add Error Logging
 
 Add:
 
 * Error trigger
 * Slack/Email alert if scraping fails
 
----
+--------------------
 
-### ✅ 2. Add Memory (CRM Integration)
+ ✅ 2. Add Memory (CRM Integration)
 
 Instead of scraping LinkedIn every time:
 
@@ -189,9 +189,9 @@ Will reduce:
 * API cost
 * Scraping risk
 
----
+----------------
 
-### ✅ 3. Upgrade LLM Model
+✅ 3. Upgrade LLM Model
 
 Instead of:
 
@@ -207,9 +207,9 @@ gpt-4.1-mini
 
 Cheaper + faster for summarization.
 
----
+---------------------------------------------------------------------
 
-# 💰 Estimated Monthly Cost
+ Estimated Monthly Cost
 
 If:
 
