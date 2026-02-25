@@ -1,112 +1,111 @@
- n8n AI Meeting Assistant workflow  
+N8N AI Meeting Assistant workflow  
 
-Let me explain clearly what this workflow is doing and where you might face issues + improvements you can make.
-
----------------------------------------------------------------------
-
-#  What This Workflow Does (Simple Explanation)
-
-This workflow builds an **AI Pre-Meeting Assistant** that:
-
-1.  Runs every hour
-2.  Checks Google Calendar for meetings happening in the next 1 hour
-3.  Extracts attendee details
-4.  Fetches last Gmail correspondence with each attendee
-5.  Scrapes their LinkedIn (via Apify)
-6.  Uses OpenAI to:
-
-   * Summarize emails
-   * Summarize LinkedIn profile + activity
-   * Generate a smart pre-meeting WhatsApp message
-7.  Sends you a WhatsApp reminder
+       Let me explain clearly what this workflow is doing and where you might face issues + improvements you can make.
 
 ---------------------------------------------------------------------
+What This Workflow Does (Simple Explanation)
 
-  Workflow Flow Breakdown (Step-by-Step)
+   This workflow builds an AI Pre-Meeting Assistant that:
 
- 1️⃣ Schedule Trigger
+           1.  Runs every hour
+           2.  Checks Google Calendar for meetings happening in the next 1 hour
+           3.  Extracts attendee details
+           4.  Fetches last Gmail correspondence with each attendee
+           5.  Scrapes their LinkedIn (via Apify)
+           6.  Uses OpenAI to:
 
-Runs every hour.
+                     Summarize emails
+                     Summarize LinkedIn profile + activity
+                     Generate a smart pre-meeting WhatsApp message
+           7.  Sends you a WhatsApp reminder
 
-⬇
+----------------------------------------------------------------------------
 
- 2️⃣ Check For Upcoming Meetings
+Workflow Flow Breakdown (Step-by-Step)
 
-Uses Google Calendar:
+ 1. Schedule Trigger
 
-* timeMin = now
-* timeMax = now + 1 hour
-
-If meeting found → continue
-
-⬇
-
- 3️⃣ Extract Attendee Info
-
-Uses LLM to extract:
-
-* name
-* email
-* linkedin_url
+     Runs every hour.
 
 ⬇
 
- 4️⃣ For Each Attendee
+ 2. Check For Upcoming Meetings
 
-Split → Research each person separately:
+     Uses Google Calendar:
 
-  Email Branch
+       timeMin = now
+       timeMax = now + 1 hour
 
-* Check if email exists
-* Fetch last Gmail message
-* Summarize with OpenAI
+     If meeting found → continue
+
+⬇
+
+3. Extract Attendee Info
+
+   Uses LLM to extract:
+
+     Name
+     Email
+     Linkedin_url
+
+⬇
+
+ 4. For Each Attendee
+
+   Split → Research each person separately:
+
+      Email Branch
+
+     Check if email exists
+     Fetch last Gmail message
+     Summarize with OpenAI
 
   LinkedIn Branch
 
-* If LinkedIn URL exists
-* Scrape via Apify using cookie
-* Extract:
+ If LinkedIn URL exists
+ Scrape via Apify using cookie
+ Extract:
 
-  * About
-  * Activity
-* Summarize using OpenAI
-
-⬇
-
-5️⃣ Merge Everything
-
-Combine:
-
-* Meeting info
-* Email summary
-* LinkedIn summary
+   About
+   Activity
+   Summarize using OpenAI
 
 ⬇
 
- 6️⃣ Generate Final SMS Style Message
+5. Merge Everything
 
-Using "Attendee Research Agent"
+   Combine:
+
+     Meeting info
+     Email summary
+     LinkedIn summary
 
 ⬇
 
- 7️⃣ Send WhatsApp Message
+ 6. Generate Final SMS Style Message
+
+       Using "Attendee Research Agent"
+
+⬇
+
+ 7. Send WhatsApp Message
 
 --------------------------------------------------------------------
 
-  Important Issues You Must Fix
+ Important Issues You Must Fix
 
  1. LinkedIn Cookie Placeholder
 
-You still have:
+You still Formate:
 
-```json
+json
 "<COPY_YOUR_LINKEDIN_COOKIES_HERE>"
-```
+
 
 This will FAIL until you paste:
 
-* Your `li_at` cookie
-* Full cookie string
+ Your `li_at` cookie
+ Full cookie string
 
  Also be careful:
 LinkedIn can block your account if scraping aggressively.
@@ -117,30 +116,30 @@ LinkedIn can block your account if scraping aggressively.
 
 This part:
 
-```js
+js
 "value": "{{ $json.linkedin_cookies.match(/li_at=([^;]+)/)[1] }}"
-```
+
 
 If cookie format changes → workflow crashes.
 
 Better approach:
 
-* Store `li_at` only
-* Avoid regex extraction
-* Save it as clean variable
+ Store `li_at` only
+ Avoid regex extraction
+ Save it as clean variable
 
 -------------------------
 
  3. WhatsApp Number Is Hardcoded
 
-```json
+json
 "recipientPhoneNumber": "44123456789"
-```
+
 
 You should:
 
-* Make this dynamic
-* Or store your real number
+ Make this dynamic
+ Or store your real number
 
 -----------------------------
 
@@ -148,9 +147,9 @@ You should:
 
 You are using:
 
-```json
+json
 "workflowId": "={{ $workflow.id }}"
-```
+
 
 This means:
 It calls itself as subworkflow.
@@ -159,51 +158,51 @@ It calls itself as subworkflow.
 
 Better:
 
-* Duplicate workflow
-* Make a separate "Attendee Research Subworkflow"
+ Duplicate workflow
+ Make a separate "Attendee Research Subworkflow"
 
 -----------------------------------------------------------------------------
 
  How To Make This Production-Ready
 
- ✅ 1. Add Error Logging
+  1. Add Error Logging
 
 Add:
 
-* Error trigger
-* Slack/Email alert if scraping fails
+ Error trigger
+ Slack/Email alert if scraping fails
 
 --------------------
 
- ✅ 2. Add Memory (CRM Integration)
+ 2. Add Memory (CRM Integration)
 
 Instead of scraping LinkedIn every time:
 
 Store:
 
-* Attendee data in Notion / Airtable
-* Only refresh monthly
+ Attendee data in Notion / Airtable
+ Only refresh monthly
 
 Will reduce:
 
-* API cost
-* Scraping risk
+ API cost
+ Scraping risk
 
 ----------------
 
-✅ 3. Upgrade LLM Model
+ 3. Upgrade LLM Model
 
 Instead of:
 
-```
+
 gpt-4o-2024-08-06
-```
+
 
 Use:
 
-```
+
 gpt-4.1-mini
-```
+
 
 Cheaper + faster for summarization.
 
@@ -213,14 +212,14 @@ Cheaper + faster for summarization.
 
 If:
 
-* 3 meetings per day
-* 2 attendees each
+ 3 meetings per day
+ 2 attendees each
 
 You’ll use roughly:
 
-* OpenAI: $5–10
-* Apify: $5 free tier
-* WhatsApp Cloud: Free under limit
+ OpenAI: $5–10
+ Apify: $5 free tier
+ WhatsApp Cloud: Free under limit
 
  
  
